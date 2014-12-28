@@ -2,7 +2,6 @@ require_relative 'salesforce/version'
 require 'active_support'
 require 'databasedotcom'
 require 'yaml'
-require 'byebug'
 
 module ActiveRecord
   module Salesforce
