@@ -14,6 +14,8 @@ module ActiveRecord
       def save_in_salesforce(config = nil)
         raise ConfigFileMissing unless config
 
+        logger = Logger.new(STDOUT)
+
         client = Databasedotcom::Client.new config
 
         begin
@@ -27,12 +29,14 @@ module ActiveRecord
 
         self.class.maped.each_pair do |key, value|
           model[key.to_s] = instance_variable_get("@#{value}")
+          model[key.to_s] = attributes[value.to_s] if (self.respond_to?(:attributes) && model[key.to_s].nil?)
         end
 
         begin
           model.save
           return true
         rescue Exception => e
+          logger.error(e)
           return false
         end
 
