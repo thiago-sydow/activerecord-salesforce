@@ -25,4 +25,9 @@ class Person
     @unread_by_owner = false
   end
 
+  #mock ActiveRecord#attributes
+  def attributes
+    {"company" => "TEste"}
+  end
+
 end

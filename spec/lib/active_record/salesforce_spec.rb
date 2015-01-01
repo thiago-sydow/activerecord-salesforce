@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'byebug'
 
 describe ActiveRecord::Salesforce::Base do
 
@@ -42,6 +43,7 @@ describe ActiveRecord::Salesforce::Base do
 
   context 'save in salesforce' do
     before do
+      @person = Person.new
       @person.company = "Empresa 1"
       @person.email = "thiagovs05@gmail.com"
       @person.job_title = "Analista de Sistemas"
@@ -59,6 +61,20 @@ describe ActiveRecord::Salesforce::Base do
 
     it 'raises error when can\'t login'  do
       expect {@person.save_in_salesforce(@config['other_company'])}.to raise_error(ActiveRecord::Salesforce::Base::UserNotAuthenticable)
+    end
+
+
+    context 'check for attributes if variable is nil' do
+      before do
+        @person.company = nil
+      end
+
+      it { expect(@person.save_in_salesforce(@config['resultados_digitais'])).to be }
+
+      it 'not saves when id mandatory and don\'t have the attribute'  do
+        @person.last_name = nil
+        expect(@person.save_in_salesforce(@config['resultados_digitais'])).to be(false)
+      end
     end
 
   end
